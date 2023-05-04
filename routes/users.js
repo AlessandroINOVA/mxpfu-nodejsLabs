@@ -22,7 +22,6 @@ let users = [
         DOB:"21-03-1989",
     },
 ];
-
 // GET request: Retrieve all users
 router.get("/",(req,res)=>{
     res.send(JSON.stringify({users},null,4));
@@ -32,11 +31,38 @@ router.get("/",(req,res)=>{
 router.get("/:email",(req,res)=>{
   // Copy the code here
   const email = req.params.email;
-  let filtered_users = users.filter((user) => user.email === email);
-  res.send(filtered_users)
+      let filtered_users = users.filter((user) => user.email === email);
+      res.send(filtered_users)
   //res.send("Yet to be implemented")//This line is to be replaced with actual return value
 });
 
+router.get("/lastName/:lastName",(req,res)=>{
+    const lastName = req.params.lastName
+    let filtered_users = users.filter((user) => user.lastName === lastName);
+    res.send(filtered_users)
+});
+
+function getDateFromString(strDate) {
+    let [dd,mm,yyyy] = strDate.split('-')
+    return new Date(yyyy+"/"+mm+"/"+dd);
+}
+function compare( a, b ) {
+    let d1 = getDateFromString(a.DOB);
+    let d2 = getDateFromString(b.DOB);
+    if ( d1 < d2 ){
+      return -1;
+    }
+    if ( d1 > d2 ){
+      return 1;
+    }
+    return 0;
+  }
+
+// console.log(sorted_users);
+router.get("/sort/sorted/",(req,res)=>{
+    let sorted_users=users.sort(compare);
+    res.send(sorted_users);
+});
 
 // POST request: Create a new user
 router.post("/",(req,res)=>{
@@ -74,7 +100,7 @@ router.put("/:email", (req, res) => {
   else{
       res.send("Unable to find user!");
   }
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+  //res.send("Yet to be implemented")//This line is to be replaced with actual return value
 });
 
 
